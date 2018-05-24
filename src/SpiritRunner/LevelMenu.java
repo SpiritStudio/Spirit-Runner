@@ -5,7 +5,7 @@ import java.util.ArrayList;
 public class LevelMenu {
 
     private ArrayList<Button> buttons;
-    private static int noButtonsX = 5, trytryrt = 3;
+    private static int asdasd = 5, trytryrt = 3;
 
     public LevelMenu() {
         buttons = new ArrayList<>();
