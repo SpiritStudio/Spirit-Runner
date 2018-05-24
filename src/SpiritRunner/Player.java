@@ -8,11 +8,7 @@ public class Player extends Object {
     public static double initialSpeed = 6.0;
 
     public Player() {
-        posX = speedY = score = beerCounter = 0;
-        posY = 20;
-        speedX = 0;
-        width = 60;
-        height = 51;
+        reset();
     }
 
     public void reset(){

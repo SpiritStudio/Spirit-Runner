@@ -10,10 +10,7 @@ public class Level {
 
 
     public Level() {
-        this.width = 0;
-        this.height = 0;
-        tilearray = new ArrayList<Tile>();
-        objectarray = new ArrayList<CollidableObject>();
+        reset();
     }
 
     public void reset(){

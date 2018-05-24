@@ -19,19 +19,11 @@ public class LevelMenu {
         for (int i = 0; i < noButtonsY*noButtonsX; i++)
             if (buttons.get(i).pressButton(mousePosX,mousePosY)){
                 levelNumber = i;
-                Main.setLevelStart(false);
-                Main.getPlayer().reset();
-                Main.getLevel().reset();
-                Main.getBg1().reset(0,0, Main.getBg1().getParallax());
-                Main.getBg2().reset(Main.getBg1().getWidth(), 0, Main.getBg2().getParallax());
-                Main.getBg2_1().reset(0,0, Main.getBg2_1().getParallax());
-                Main.getBg2_2().reset(Main.getBg2_1().getWidth(), 0, Main.getBg2_2().getParallax());
-                Main.setGameState(Main.GameState.GAME);
-                Main.getLevel().start(i+1);
+                reset(levelNumber);
             }
     }
 
-    public void reset() {
+    public void reset(int levelNumber) {
         Main.setLevelStart(false);
         Main.getPlayer().reset();
         Main.getLevel().reset();
@@ -41,6 +33,10 @@ public class LevelMenu {
         Main.getBg2_2().reset(Main.getBg2_1().getWidth(), 0, Main.getBg2_2().getParallax());
         Main.setGameState(Main.GameState.GAME);
         Main.getLevel().start(levelNumber+1);
+    }
+
+    public void reset() {
+        reset(levelNumber);
     }
 
     public void update() {
