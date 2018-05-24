@@ -11,25 +11,26 @@ import java.net.URL;
 
 public class Main extends Applet implements Runnable, KeyListener, MouseListener {
     public enum GameState {
-        MENU, LEVELMENU, GAME, EXIT
+        MENU, LEVELMENU, GAME, EXIT, GAMEOVERMENU
     }
 
     private static GameState gameState = GameState.MENU;
 
     private static int gameWidth = 800, gameHeight = 480;
 
-    private Image image, background, background2, logo, character;
-    public static Image tiles[], objects[];
+    private Image image, background, logo, character;
 
     private Menu menu;
-    private LevelMenu levelMenu;
+    private static LevelMenu levelMenu;
+    private GameOverMenu gameOverMenu;
 
     public static int noTiles = 6, noObjects = 3;
+    public static Image tiles[], objects[];
 
     private Graphics second;
     private static Font gameFont = new Font("Calibri", Font.BOLD, 24);
     private String baseString;
-    private static Background bg1, bg2, bg2_1, bg2_2;
+    private static Background bg1, bg2;
     private static int scroll = 0, scrollSpeed = 0;
 
     private static boolean levelStart = false;
@@ -59,7 +60,6 @@ public class Main extends Applet implements Runnable, KeyListener, MouseListener
         try {
             logo = getImage(new URL(baseString + "/data/logo.png"));
             background = getImage(new URL(baseString + "/data/background.png"));
-            background2 = getImage(new URL(baseString + "/data/background2.png"));
             character = getImage(new URL(baseString + "/data/character.png"));
             for (int i = 0; i < noTiles; i++) {
                 tiles[i] = getImage(new URL(baseString + "/data/tile"+Integer.toString(i+1)+".png"));
@@ -76,10 +76,9 @@ public class Main extends Applet implements Runnable, KeyListener, MouseListener
     public void start() {
         menu = new Menu();
         levelMenu = new LevelMenu();
+        gameOverMenu = new GameOverMenu();
         bg1 = new Background(0, 0, 4.);
         bg2 = new Background(bg1.getWidth(), 0, 4.);
-        bg2_1 = new Background(0, 0, 2.);
-        bg2_2 = new Background(bg2_1.getWidth(), 0, 2.);
         level = new Level();
         player = new Player();
 
@@ -154,8 +153,6 @@ public class Main extends Applet implements Runnable, KeyListener, MouseListener
         if (gameState == GameState.GAME) {
             g.drawImage(background, (int) bg1.getPosX() - (int)(scroll/bg1.getParallax()), (int) bg1.getPosY(), this);
             g.drawImage(background, (int) bg2.getPosX() - (int)(scroll/bg2.getParallax()), (int) bg2.getPosY(), this);
-            g.drawImage(background2, (int) bg2_1.getPosX() - (int)(scroll/bg2_1.getParallax()), (int) bg2_1.getPosY(), this);
-            g.drawImage(background2, (int) bg2_2.getPosX() - (int)(scroll/bg2_2.getParallax()), (int) bg2_2.getPosY(), this);
             paintTiles(g);
             g.drawImage(character, (int) player.getPosX()- scroll, (int) player.getPosY(), this);
             g.setColor(Color.WHITE);
@@ -188,6 +185,16 @@ public class Main extends Applet implements Runnable, KeyListener, MouseListener
                     g.drawString(b.getText(), (int)b.getPosX() + 15, (int)b.getPosY() + 27);
                 }
 
+        }
+        else if (gameState == GameState.GAMEOVERMENU) {
+            for (int i = 0; i < gameOverMenu.getNoButtons(); i++) {
+                Button b = gameOverMenu.getButtons().get(i);
+                g.setColor(Color.LIGHT_GRAY);
+                g.fillRect((int) b.getPosX(), (int) b.getPosY(), (int) b.getWidth(), (int) b.getHeight());
+                g.setColor(Color.BLACK);
+                g.setFont(gameFont);
+                g.drawString(b.getText(), (int) b.getPosX() + 15, (int) b.getPosY() + 27);
+            }
         }
     }
 
@@ -269,6 +276,9 @@ public class Main extends Applet implements Runnable, KeyListener, MouseListener
         else if (gameState == GameState.LEVELMENU){
             levelMenu.pressButton(e.getX(), e.getY());
         }
+        else if (gameState == GameState.GAMEOVERMENU){
+            gameOverMenu.pressButton(e.getX(), e.getY());
+        }
     }
 
     @Override
@@ -324,5 +334,8 @@ public class Main extends Applet implements Runnable, KeyListener, MouseListener
     }
     public static void setLevelStart(boolean levelStart) {
         Main.levelStart = levelStart;
+    }
+    public static LevelMenu getLevelMenu() {
+        return levelMenu;
     }
 }

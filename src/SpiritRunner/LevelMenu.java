@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 public class LevelMenu {
 
+    private int levelNumber = 0;
     private ArrayList<Button> buttons;
     private static int noButtonsX = 5, noButtonsY = 3;
 
@@ -17,6 +18,7 @@ public class LevelMenu {
     public void pressButton(int mousePosX, int mousePosY) {
         for (int i = 0; i < noButtonsY*noButtonsX; i++)
             if (buttons.get(i).pressButton(mousePosX,mousePosY)){
+                levelNumber = i;
                 Main.setLevelStart(false);
                 Main.getPlayer().reset();
                 Main.getLevel().reset();
@@ -25,6 +27,16 @@ public class LevelMenu {
                 Main.setGameState(Main.GameState.GAME);
                 Main.getLevel().start(i+1);
             }
+    }
+
+    public void reset() {
+        Main.setLevelStart(false);
+        Main.getPlayer().reset();
+        Main.getLevel().reset();
+        Main.getBg1().reset(0,0, 4.);
+        Main.getBg2().reset(Main.getBg1().getWidth(), 0, 4.);
+        Main.setGameState(Main.GameState.GAME);
+        Main.getLevel().start(levelNumber+1);
     }
 
     public void update() {

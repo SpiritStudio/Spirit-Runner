@@ -31,6 +31,7 @@ public class Player extends Object {
     public void update(){
         if(inAir) speedY += 1;
         else speedY = 0;
+        if(posY + height > Main.getGameHeight()) Main.setGameState(Main.GameState.GAMEOVERMENU);
         posX += speedX;
         posY += speedY;
     }
