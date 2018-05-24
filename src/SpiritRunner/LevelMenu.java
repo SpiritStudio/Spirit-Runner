@@ -22,8 +22,10 @@ public class LevelMenu {
                 Main.setLevelStart(false);
                 Main.getPlayer().reset();
                 Main.getLevel().reset();
-                Main.getBg1().reset(0,0, 4.);
-                Main.getBg2().reset(Main.getBg1().getWidth(), 0, 4.);
+                Main.getBg1().reset(0,0, Main.getBg1().getParallax());
+                Main.getBg2().reset(Main.getBg1().getWidth(), 0, Main.getBg2().getParallax());
+                Main.getBg2_1().reset(0,0, Main.getBg2_1().getParallax());
+                Main.getBg2_2().reset(Main.getBg2_1().getWidth(), 0, Main.getBg2_2().getParallax());
                 Main.setGameState(Main.GameState.GAME);
                 Main.getLevel().start(i+1);
             }
@@ -33,8 +35,10 @@ public class LevelMenu {
         Main.setLevelStart(false);
         Main.getPlayer().reset();
         Main.getLevel().reset();
-        Main.getBg1().reset(0,0, 4.);
-        Main.getBg2().reset(Main.getBg1().getWidth(), 0, 4.);
+        Main.getBg1().reset(0,0, Main.getBg1().getParallax());
+        Main.getBg2().reset(Main.getBg1().getWidth(), 0, Main.getBg2().getParallax());
+        Main.getBg2_1().reset(0,0, Main.getBg2_1().getParallax());
+        Main.getBg2_2().reset(Main.getBg2_1().getWidth(), 0, Main.getBg2_2().getParallax());
         Main.setGameState(Main.GameState.GAME);
         Main.getLevel().start(levelNumber+1);
     }

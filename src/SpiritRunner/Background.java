@@ -24,8 +24,8 @@ public class Background extends Object {
     }
 
     public void update() {
-        if (posX - Main.getScroll()/parallax <= -width){
-            posX = width + Main.getScroll()/parallax;
+        if (posX - Main.getPlayer().getSpeedX() - (double)Main.getScroll()/parallax < -(double)width) {
+            posX = (double)width + (double)Main.getScroll()/parallax;
         }
     }
     public double getParallax() {

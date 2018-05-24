@@ -18,7 +18,7 @@ public class Main extends Applet implements Runnable, KeyListener, MouseListener
 
     private static int gameWidth = 800, gameHeight = 480;
 
-    private Image image, background, logo, character;
+    private Image image, background, background2, logo, character;
 
     private Menu menu;
     private static LevelMenu levelMenu;
@@ -30,7 +30,7 @@ public class Main extends Applet implements Runnable, KeyListener, MouseListener
     private Graphics second;
     private static Font gameFont = new Font("Calibri", Font.BOLD, 24);
     private String baseString;
-    private static Background bg1, bg2;
+    private static Background bg1, bg2, bg2_1, bg2_2;
     private static int scroll = 0, scrollSpeed = 0;
 
     private static boolean levelStart = false;
@@ -60,6 +60,7 @@ public class Main extends Applet implements Runnable, KeyListener, MouseListener
         try {
             logo = getImage(new URL(baseString + "/data/logo.png"));
             background = getImage(new URL(baseString + "/data/background.png"));
+            background2 = getImage(new URL(baseString + "/data/background2.png"));
             character = getImage(new URL(baseString + "/data/character.png"));
             for (int i = 0; i < noTiles; i++) {
                 tiles[i] = getImage(new URL(baseString + "/data/tile"+Integer.toString(i+1)+".png"));
@@ -79,6 +80,8 @@ public class Main extends Applet implements Runnable, KeyListener, MouseListener
         gameOverMenu = new GameOverMenu();
         bg1 = new Background(0, 0, 4.);
         bg2 = new Background(bg1.getWidth(), 0, 4.);
+        bg2_1 = new Background(0, 0, 3.);
+        bg2_2 = new Background(bg2_1.getWidth(), 0, 3.);
         level = new Level();
         player = new Player();
 
@@ -108,6 +111,8 @@ public class Main extends Applet implements Runnable, KeyListener, MouseListener
 
                 bg1.update();
                 bg2.update();
+                bg2_1.update();
+                bg2_2.update();
                 level.update(player);
                 player.update();
             }
@@ -153,6 +158,10 @@ public class Main extends Applet implements Runnable, KeyListener, MouseListener
         if (gameState == GameState.GAME) {
             g.drawImage(background, (int) bg1.getPosX() - (int)(scroll/bg1.getParallax()), (int) bg1.getPosY(), this);
             g.drawImage(background, (int) bg2.getPosX() - (int)(scroll/bg2.getParallax()), (int) bg2.getPosY(), this);
+            g.drawImage(background2, (int) bg2_1.getPosX() - (int)(scroll/bg2_1.getParallax()), (int) bg2_1.getPosY(), this);
+            g.drawImage(background2, (int) bg2_2.getPosX() - (int)(scroll/bg2_2.getParallax()), (int) bg2_2.getPosY(), this);
+
+
             paintTiles(g);
             g.drawImage(character, (int) player.getPosX()- scroll, (int) player.getPosY(), this);
             g.setColor(Color.WHITE);
@@ -301,6 +310,12 @@ public class Main extends Applet implements Runnable, KeyListener, MouseListener
     }
     public static Background getBg2() {
         return bg2;
+    }
+    public static Background getBg2_1() {
+        return bg2_1;
+    }
+    public static Background getBg2_2() {
+        return bg2_2;
     }
 
     public static int getScroll() {
