@@ -19,7 +19,7 @@ public class Main extends Applet implements Runnable, KeyListener, MouseListener
     private static int gameWidth = 800, gameHeight = 480;
 
     private Image image, background, background2, logo, character;
-    public static Image tiles[], objects[];
+    public static Image pykes[], objects[];
 
     private Menu menu;
     private LevelMenu levelMenu;
