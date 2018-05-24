@@ -34,9 +34,6 @@ public class Main extends Applet implements Runnable, KeyListener, MouseListener
 
     private static boolean levelStart = false;
 
-    private static Level level;
-    private static Player player;
-
     private static double time = System.currentTimeMillis();
 
     @Override
