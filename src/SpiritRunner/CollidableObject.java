@@ -9,12 +9,14 @@ public class CollidableObject extends Object {
     }
 
     protected ObjectType objectType;
+    protected boolean remove;
     public Image image;
 
     public CollidableObject(){
         posX = posY = speedX = speedY = 0;
         width = height = 0;
         image = null;
+        remove = false;
     }
 
     public CollidableObject(double posX, double posY, char chosenObject ) {
@@ -57,4 +59,8 @@ public class CollidableObject extends Object {
 
     public ObjectType getObjectType() { return objectType; }
     public Image getImage() { return image; }
+    public boolean isRemove() {return remove;}
+    public void setRemove(boolean remove) {
+        this.remove = remove;
+    }
 }

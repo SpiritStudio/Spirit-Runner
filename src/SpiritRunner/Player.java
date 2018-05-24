@@ -27,7 +27,12 @@ public class Player extends Object {
     public void update(){
         if(inAir) speedY += 1;
         else speedY = 0;
-        if(posY + height > Main.getGameHeight()) Main.setGameState(Main.GameState.GAMEOVERMENU);
+        if(posY + height > Main.getGameHeight()) Main.setGameState(Main.GameState.GAMEOVERMENU); //TODO PLAYER RESET AFTER DEATH
+        if (posX + width > Main.getLevel().getWidth() * Tile.getTileWidth()) {
+            posX = Main.getLevel().getWidth() * Tile.getTileWidth() - width;
+            speedX = 0;
+        }
+
         posX += speedX;
         posY += speedY;
     }

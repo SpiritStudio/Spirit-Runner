@@ -142,8 +142,12 @@ public class Level {
         //checks collision with collidable objects
         for(int i = 0; i < objectarray.size(); i++) {
             objectarray.get(i).update(player);
-            if (objectarray.get(i).checkPlayerCollision(player) && (objectarray.get(i).getObjectType() == CollidableObject.ObjectType.COIN ||objectarray.get(i).getObjectType() == CollidableObject.ObjectType.BEER))
+            if (objectarray.get(i).checkPlayerCollision(player) && (objectarray.get(i).getObjectType() == CollidableObject.ObjectType.COIN ||objectarray.get(i).getObjectType() == CollidableObject.ObjectType.BEER)) {
+                objectarray.get(i).setRemove(true);
+            }
+            if (objectarray.get(i).isRemove() && objectarray.get(i).getPosY() < -200) {
                 objectarray.remove(i);
+            }
         }
     }
 

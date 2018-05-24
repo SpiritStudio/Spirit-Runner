@@ -107,7 +107,7 @@ public class Main extends Applet implements Runnable, KeyListener, MouseListener
                 scroll = (int) player.getPosX();
 
                 if (scroll < 0) scroll = 0;
-                if (scroll > level.getWidth() * Tile.getTileWidth()) scroll = Tile.getTileWidth() * level.getWidth();
+                if (scroll > level.getWidth() * Tile.getTileWidth() - gameWidth) scroll = Tile.getTileWidth() * level.getWidth() - gameWidth;
 
                 bg1.update();
                 bg2.update();

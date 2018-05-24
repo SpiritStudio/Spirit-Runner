@@ -25,7 +25,12 @@ public class Beer extends CollidableObject{
     }
 
     public boolean update(Player player) {
-        if (checkPlayerCollision(player)) {
+        if (remove) {
+            speedY = -10;
+            posY += speedY;
+            return false;
+        }
+        else if (checkPlayerCollision(player)) {
             player.increaseBeerCount();
             return true;
         } else return false;
