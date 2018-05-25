@@ -104,7 +104,7 @@ public class Main extends Applet implements Runnable, KeyListener, MouseListener
         while (gameState != GameState.EXIT) {
             time = System.nanoTime();
             if (gameState == GameState.GAME) {
-                scroll = (int) player.getPosX();
+                scroll = (int) player.getPosX() - 30;
 
                 if (scroll < 0) scroll = 0;
                 if (scroll > level.getWidth() * Tile.getTileWidth() - gameWidth) scroll = Tile.getTileWidth() * level.getWidth() - gameWidth;
