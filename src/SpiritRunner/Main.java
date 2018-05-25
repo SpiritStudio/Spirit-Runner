@@ -24,7 +24,10 @@ public class Main extends Applet implements Runnable, KeyListener, MouseListener
     private static LevelMenu levelMenu;
     private GameOverMenu gameOverMenu;
 
-    public static int noTiles = 6, noObjects = 3;
+    public static int noTiles = 6;
+    public static int noObjects = 3;
+    public static int noDecorations = 2;
+
     public static Image tiles[], objects[];
 
     private Graphics second;
@@ -172,38 +175,13 @@ public class Main extends Applet implements Runnable, KeyListener, MouseListener
         else if (gameState == GameState.MENU) {
             // TODO - menu drawing
             g.drawImage(logo, 150, 0, this);
-
-            for (int i = 0; i < mainMenu.getNoButtons(); i++) {
-                Button b = mainMenu.getButtons().get(i);
-                g.setColor(Color.LIGHT_GRAY);
-                g.fillRect((int)b.getPosX(), (int)b.getPosY(), (int)b.getWidth(), (int)b.getHeight());
-                g.setColor(Color.BLACK);
-                g.setFont(gameFont);
-                g.drawString(b.getText(), (int)b.getPosX() + 15, (int)b.getPosY() + 27);
-            }
+            paintButtons(g, mainMenu);
         }
         else if (gameState == GameState.LEVELMENU){
-            for (int i = 0; i < levelMenu.getNoButtonsY(); i++)
-                for(int j = 0; j < levelMenu.getNoButtonsX(); j++){
-                    //System.out.println(i+ " * " + levelMenu.getNoButtonsX() + " + " + j);
-                    Button b = levelMenu.getButtons().get(i*levelMenu.getNoButtonsX() + j);
-                    g.setColor(Color.LIGHT_GRAY);
-                    g.fillRect((int)b.getPosX(), (int)b.getPosY(), (int)b.getWidth(), (int)b.getHeight());
-                    g.setColor(Color.BLACK);
-                    g.setFont(gameFont);
-                    g.drawString(b.getText(), (int)b.getPosX() + 15, (int)b.getPosY() + 27);
-                }
-
+            paintButtons(g, levelMenu);
         }
         else if (gameState == GameState.GAMEOVERMENU) {
-            for (int i = 0; i < gameOverMenu.getNoButtons(); i++) {
-                Button b = gameOverMenu.getButtons().get(i);
-                g.setColor(Color.LIGHT_GRAY);
-                g.fillRect((int) b.getPosX(), (int) b.getPosY(), (int) b.getWidth(), (int) b.getHeight());
-                g.setColor(Color.BLACK);
-                g.setFont(gameFont);
-                g.drawString(b.getText(), (int) b.getPosX() + 15, (int) b.getPosY() + 27);
-            }
+            paintButtons(g, gameOverMenu);
         }
     }
 
@@ -216,6 +194,17 @@ public class Main extends Applet implements Runnable, KeyListener, MouseListener
         for (int i = 0; i < level.getObjectarray().size(); i++) {
             CollidableObject o  = (CollidableObject) level.getObjectarray().get(i);
             g.drawImage(o.getImage(), (int)o.getPosX() - scroll, (int)o.getPosY(), this);
+        }
+    }
+
+    private void paintButtons (Graphics g, Menu menu) {
+        for (int i = 0; i < menu.getNoButtons(); i++) {
+            Button b = menu.getButtons().get(i);
+            g.setColor(Color.LIGHT_GRAY);
+            g.fillRect((int)b.getPosX(), (int)b.getPosY(), (int)b.getWidth(), (int)b.getHeight());
+            g.setColor(Color.BLACK);
+            g.setFont(gameFont);
+            g.drawString(b.getText(), (int)b.getPosX() + 15, (int)b.getPosY() + 27);
         }
     }
 
@@ -353,4 +342,6 @@ public class Main extends Applet implements Runnable, KeyListener, MouseListener
     public static LevelMenu getLevelMenu() {
         return levelMenu;
     }
+    public static int getNoDecorations() { return noDecorations; }
+
 }
