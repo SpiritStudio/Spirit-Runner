@@ -26,7 +26,7 @@ public class Enemy extends CollidableObject {
 
     public boolean update(Player player) {
         if (checkPlayerCollision(player)) {
-            Main.setGameState(Main.GameState.MENU);
+            Main.setGameState(Main.GameState.GAMEOVERMENU);
             return true;
         } else return false;
     }
