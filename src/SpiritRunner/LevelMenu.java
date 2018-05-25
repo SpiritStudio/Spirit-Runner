@@ -2,13 +2,13 @@ package SpiritRunner;
 
 import java.util.ArrayList;
 
-public class LevelMenu {
+public class LevelMenu extends Menu{
 
     private int levelNumber = 0;
-    private ArrayList<Button> buttons;
     private static int noButtonsX = 5, noButtonsY = 3;
 
     public LevelMenu() {
+        noButtons = noButtonsX*noButtonsY;
         buttons = new ArrayList<>();
         for (int i = 0; i < noButtonsY; i++)
             for(int j = 0; j < noButtonsX; j++)
@@ -41,10 +41,6 @@ public class LevelMenu {
 
     public void update() {
         //TODO MENU ANIMATIONS
-    }
-
-    public ArrayList<Button> getButtons() {
-        return buttons;
     }
 
     public static int getNoButtonsX() {

@@ -20,7 +20,7 @@ public class Main extends Applet implements Runnable, KeyListener, MouseListener
 
     private Image image, background, background2, logo, character;
 
-    private Menu menu;
+    private MainMenu mainMenu;
     private static LevelMenu levelMenu;
     private GameOverMenu gameOverMenu;
 
@@ -75,7 +75,7 @@ public class Main extends Applet implements Runnable, KeyListener, MouseListener
 
     @Override
     public void start() {
-        menu = new Menu();
+        mainMenu = new MainMenu();
         levelMenu = new LevelMenu();
         gameOverMenu = new GameOverMenu();
         bg1 = new Background(0, 0, 4.);
@@ -117,7 +117,7 @@ public class Main extends Applet implements Runnable, KeyListener, MouseListener
                 player.update();
             }
             else if (gameState == GameState.MENU) {
-                menu.update();
+                mainMenu.update();
             }
             else if (gameState == GameState.LEVELMENU){
                 levelMenu.update();
@@ -173,8 +173,8 @@ public class Main extends Applet implements Runnable, KeyListener, MouseListener
             // TODO - menu drawing
             g.drawImage(logo, 150, 0, this);
 
-            for (int i = 0; i < menu.getNoButtons(); i++) {
-                Button b = menu.getButtons().get(i);
+            for (int i = 0; i < mainMenu.getNoButtons(); i++) {
+                Button b = mainMenu.getButtons().get(i);
                 g.setColor(Color.LIGHT_GRAY);
                 g.fillRect((int)b.getPosX(), (int)b.getPosY(), (int)b.getWidth(), (int)b.getHeight());
                 g.setColor(Color.BLACK);
@@ -280,7 +280,7 @@ public class Main extends Applet implements Runnable, KeyListener, MouseListener
     @Override
     public void mousePressed(MouseEvent e) {
         if (gameState == GameState.MENU) {
-            menu.pressButton(e.getX(), e.getY());
+            mainMenu.pressButton(e.getX(), e.getY());
         }
         else if (gameState == GameState.LEVELMENU){
             levelMenu.pressButton(e.getX(), e.getY());
