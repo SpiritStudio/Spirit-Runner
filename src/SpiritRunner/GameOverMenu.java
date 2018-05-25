@@ -5,7 +5,7 @@ import java.util.ArrayList;
 public class GameOverMenu {
     private ArrayList<Button> buttons;
     private int noButtons = 2;
-sefgsdfgsdf
+    //sefgsdfgsdf
     public GameOverMenu(){
         buttons = new ArrayList<>();
         buttons.add(new Button(Main.getGameWidth()/2 - 100, 200.0, 200, 40, "TRY AGAIN"));
