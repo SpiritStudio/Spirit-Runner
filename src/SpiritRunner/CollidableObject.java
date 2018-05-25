@@ -22,23 +22,6 @@ public class CollidableObject extends Object {
     public CollidableObject(double posX, double posY, char chosenObject ) {
         this.posX = posX;
         this.posY = posY;
-
-        if (Character.getNumericValue(chosenObject)- Main.getNoTiles() < Main.noObjects) {
-            int objectNumber = Character.getNumericValue(chosenObject) - Main.getNoTiles();
-
-            image = Main.objects[objectNumber - 1];
-            switch (objectNumber) {
-                case 1:
-                    objectType = ObjectType.BEER;
-                    break;
-                case 2:
-                    objectType = ObjectType.COIN;
-                    break;
-                case 3:
-                    objectType = ObjectType.ENEMY;
-                    break;
-            }
-        }
     }
     //returns true if there was a collision
     public boolean update(Player player) {

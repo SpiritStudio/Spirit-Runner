@@ -6,6 +6,7 @@ import java.util.ArrayList;
 public class Level {
     private ArrayList<Tile> tilearray;
     private ArrayList<CollidableObject> objectarray;
+    private ArrayList<Decoration> decorationarray;
     private int width, height;
 
 
@@ -18,6 +19,7 @@ public class Level {
         this.height = 0;
         tilearray = new ArrayList<Tile>();
         objectarray = new ArrayList<CollidableObject>();
+        decorationarray = new ArrayList<Decoration>();
     }
 
     public void start(int noMap) {
@@ -91,15 +93,16 @@ public class Level {
             //System.out.println(posY);
             if (chosenObject == '1')
                 objectarray.add(new Beer(posX, posY, Beer.beerWidth, Beer.beerHeight, '1'));
-            if (chosenObject == '2')
+            else if (chosenObject == '2')
                 objectarray.add(new Coin(posX, posY, Coin.coinWidth, Coin.coinHeight, 1,  '2'));
-            if (chosenObject == '3')
+            else if (chosenObject == '3')
                 objectarray.add(new Enemy(posX, posY, Enemy.enemyWidth, Enemy.enemyHeight, '3'));
+            else
+                decorationarray.add(new Decoration(posX, posY, chosenObject));
         }
     }
 
     public void placeTile(char chosenTile, int posX, int posY) {
-        // Sprawdzanie, czy na tym miejscu jest już jakiś element
         boolean placeable = true;
         if (tilearray.size() > 0) {
             for (int i = 0; i < tilearray.size(); i++) {
@@ -120,7 +123,7 @@ public class Level {
     }
 
     public void update(Player player){
-        //chcecks collisions with tiles
+        //checks collisions with tiles
         player.setInAir(true);
         player.setHanging(false);
         for (int i =0; i < tilearray.size(); i++) {
@@ -133,7 +136,6 @@ public class Level {
                     player.setHanging(true);
                     player.setPosY(tilearray.get(i).getPosY() + Tile.getTileWidth()/2);
                 }
-                //else System.out.println("collision with tile " + i);
                 break;
 
             }
@@ -157,4 +159,7 @@ public class Level {
     public CollidableObject getObject(int objectIndex){ return objectarray.get(objectIndex); }
     public int getWidth() { return width; }
 
+    public ArrayList<Decoration> getDecorationarray() {
+        return decorationarray;
+    }
 }

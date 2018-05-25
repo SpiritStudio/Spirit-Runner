@@ -3,8 +3,6 @@ package SpiritRunner;
 import java.applet.Applet;
 import java.awt.*;
 import java.awt.event.*;
-import java.awt.image.ConvolveOp;
-import java.awt.image.Kernel;
 import java.io.File;
 import java.net.URL;
 
@@ -49,7 +47,7 @@ public class Main extends Applet implements Runnable, KeyListener, MouseListener
         scroll = 0;
         scrollSpeed = 0;
         tiles = new Image[noTiles];
-        objects = new Image[noObjects];
+        objects = new Image[noObjects + noDecorations];
 
         setBackground(Color.BLACK);
         setFocusable(true);
@@ -68,7 +66,7 @@ public class Main extends Applet implements Runnable, KeyListener, MouseListener
             for (int i = 0; i < noTiles; i++) {
                 tiles[i] = getImage(new URL(baseString + "/data/tile"+Integer.toString(i+1)+".png"));
             }
-            for (int i = 0; i < noObjects; i++) {
+            for (int i = 0; i < noObjects + noDecorations; i++) {
                 objects[i] = getImage(new URL(baseString + "/data/object"+Integer.toString(i+1)+".png"));
             }
         } catch (Exception e) {
@@ -164,8 +162,8 @@ public class Main extends Applet implements Runnable, KeyListener, MouseListener
             g.drawImage(background2, (int) bg2_1.getPosX() - (int)(scroll/bg2_1.getParallax()), (int) bg2_1.getPosY(), this);
             g.drawImage(background2, (int) bg2_2.getPosX() - (int)(scroll/bg2_2.getParallax()), (int) bg2_2.getPosY(), this);
 
+            paintLevel(g);
 
-            paintTiles(g);
             g.drawImage(character, (int) player.getPosX()- scroll, (int) player.getPosY(), this);
             g.setColor(Color.WHITE);
 
@@ -185,7 +183,7 @@ public class Main extends Applet implements Runnable, KeyListener, MouseListener
         }
     }
 
-    private void paintTiles(Graphics g) {
+    private void paintLevel(Graphics g) {
         for (int i = 0; i < level.getTilearray().size(); i++) {
             Tile t = (Tile) level.getTilearray().get(i);
             g.drawImage(t.getTileImage(), (int)t.getPosX() - scroll, (int)t.getPosY(), this);
@@ -194,6 +192,10 @@ public class Main extends Applet implements Runnable, KeyListener, MouseListener
         for (int i = 0; i < level.getObjectarray().size(); i++) {
             CollidableObject o  = (CollidableObject) level.getObjectarray().get(i);
             g.drawImage(o.getImage(), (int)o.getPosX() - scroll, (int)o.getPosY(), this);
+        }
+        for (int i = 0; i < level.getDecorationarray().size(); i++) {
+            Decoration d = (Decoration) level.getDecorationarray().get(i);
+            g.drawImage(d.getImage(), (int)d.getPosX() - scroll, (int)d.getPosY(), this);
         }
     }
 
@@ -343,5 +345,6 @@ public class Main extends Applet implements Runnable, KeyListener, MouseListener
         return levelMenu;
     }
     public static int getNoDecorations() { return noDecorations; }
+    public static int getNoObjects() { return noObjects; }
 
 }
