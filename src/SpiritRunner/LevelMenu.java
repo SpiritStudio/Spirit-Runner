@@ -31,8 +31,8 @@ public class LevelMenu extends Menu{
         Main.getBg2().reset(Main.getBg1().getWidth(), 0, Main.getBg2().getParallax());
         Main.getBg2_1().reset(0,0, Main.getBg2_1().getParallax());
         Main.getBg2_2().reset(Main.getBg2_1().getWidth(), 0, Main.getBg2_2().getParallax());
-        Main.setGameState(Main.GameState.GAME);
         Main.getLevel().start(levelNumber+1);
+        Main.setGameState(Main.GameState.GAME);
     }
 
     public void reset() {
