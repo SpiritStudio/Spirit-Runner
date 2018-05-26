@@ -8,7 +8,7 @@ public class Animation {
     private ArrayList<Image> images;
     private ArrayList<Integer> stateLength;
     private ArrayList<Integer> framesLength;
-    private int currentFrame, currentState, timer;
+    private int currentFrame, currentState, timer, firstImageToDisplay;
 
     public Animation() {
         images = new ArrayList<Image>();
@@ -17,6 +17,7 @@ public class Animation {
         currentFrame = 0;
         currentState = 0;
         timer = 0;
+        firstImageToDisplay = 0;
     }
 
     //When you want to add another state (e.g. player hanging/running), run addState method, then addFrame - multiple times
@@ -43,16 +44,14 @@ public class Animation {
     }
 
     public void paint(Graphics g, int posX, int posY, ImageObserver observer) {
-        int frameToDisplay = 0;
-        for (int i = 0; i < currentState; i++)
-            frameToDisplay += stateLength.get(i);
-
-        frameToDisplay = frameToDisplay + currentFrame;
-        g.drawImage(images.get(frameToDisplay), posX, posY, observer);
+        g.drawImage(images.get(currentFrame + firstImageToDisplay), posX, posY, observer);
     }
 
     public void setState(int currentState) {
         this.currentState = currentState;
+        firstImageToDisplay = 0;
+        for (int i = 0; i < currentState; i++)
+            firstImageToDisplay += stateLength.get(i);
     }
 
     public Image getImage(int frame) {
