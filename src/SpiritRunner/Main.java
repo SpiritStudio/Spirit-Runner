@@ -9,10 +9,10 @@ import java.net.URL;
 
 public class Main extends Applet implements Runnable, KeyListener, MouseListener {
     public enum GameState {
-        MENU, LEVELMENU, GAME, EXIT, GAMEOVERMENU
+        MAINMENU, LEVELMENU, GAME, EXIT, GAMEOVERMENU, LEVELPASSEDMENU
     }
 
-    private static GameState gameState = GameState.MENU;
+    private static GameState gameState = GameState.MAINMENU;
 
     private static int gameWidth = 800, gameHeight = 480;
 
@@ -23,6 +23,7 @@ public class Main extends Applet implements Runnable, KeyListener, MouseListener
     private MainMenu mainMenu;
     private static LevelMenu levelMenu;
     private GameOverMenu gameOverMenu;
+    private LevelPassedMenu levelPassedMenu;
 
     public static int noTiles = 6;
     public static int noObjects = 3;
@@ -51,7 +52,6 @@ public class Main extends Applet implements Runnable, KeyListener, MouseListener
         tiles = new Image[noTiles];
         objects = new Image[noObjects + noDecorations];
         character = new Animation();
-
 
         setBackground(Color.BLACK);
         setFocusable(true);
@@ -100,6 +100,7 @@ public class Main extends Applet implements Runnable, KeyListener, MouseListener
         mainMenu = new MainMenu();
         levelMenu = new LevelMenu();
         gameOverMenu = new GameOverMenu();
+        levelPassedMenu = new LevelPassedMenu();
         bg1 = new Background(0, 0, 4.);
         bg2 = new Background(bg1.getWidth(), 0, 4.);
         bg2_1 = new Background(0, 0, 3.);
@@ -126,25 +127,36 @@ public class Main extends Applet implements Runnable, KeyListener, MouseListener
         while (gameState != GameState.EXIT) {
             time = System.nanoTime();
             if (gameState == GameState.GAME) {
-                scroll = (int) player.getPosX() - 30;
+                if (player.getPosX() >= level.getWidth()*Tile.getTileWidth() - player.getWidth()){
+                    gameState = GameState.LEVELPASSEDMENU;
+                } else {
+                    scroll = (int) player.getPosX() - 30;
 
-                if (scroll < 0) scroll = 0;
-                if (scroll > level.getWidth() * Tile.getTileWidth() - gameWidth) scroll = Tile.getTileWidth() * level.getWidth() - gameWidth;
+                    if (scroll < 0) scroll = 0;
+                    if (scroll > level.getWidth() * Tile.getTileWidth() - gameWidth)
+                        scroll = Tile.getTileWidth() * level.getWidth() - gameWidth;
 
-                bg1.update();
-                bg2.update();
-                bg2_1.update();
-                bg2_2.update();
-                level.update(player);
-                player.update();
+                    bg1.update();
+                    bg2.update();
+                    bg2_1.update();
+                    bg2_2.update();
+                    level.update(player);
+                    player.update();
 
-                character.update();
+                    character.update();
+                }
             }
-            else if (gameState == GameState.MENU) {
+            else if (gameState == GameState.MAINMENU) {
                 mainMenu.update();
             }
             else if (gameState == GameState.LEVELMENU){
                 levelMenu.update();
+            }
+            else if (gameState == GameState.LEVELPASSEDMENU){
+                levelPassedMenu.update();
+            }
+            else if (gameState == GameState.GAMEOVERMENU){
+                gameOverMenu.update();
             }
 
             repaint();
@@ -184,16 +196,13 @@ public class Main extends Applet implements Runnable, KeyListener, MouseListener
             g.drawImage(background, (int) bg2.getPosX() - (int)(scroll/bg2.getParallax()), (int) bg2.getPosY(), this);
             g.drawImage(background2, (int) bg2_1.getPosX() - (int)(scroll/bg2_1.getParallax()), (int) bg2_1.getPosY(), this);
             g.drawImage(background2, (int) bg2_2.getPosX() - (int)(scroll/bg2_2.getParallax()), (int) bg2_2.getPosY(), this);
-
             paintLevel(g);
-
             character.paint(g, (int)player.getPosX() - scroll, (int)player.getPosY(), this);
-
             g.setColor(Color.WHITE);
             g.drawString(String.format("%04d", player.getScore()), gameWidth-70, 30);
-            g.drawString("Beers drunk: " + String.format("%02d", player.getBeerCounter()), gameWidth-180, 70);
+            g.drawString(String.format("%02d", player.getBeerCounter()), gameWidth-45, 70);
         }
-        else if (gameState == GameState.MENU) {
+        else if (gameState == GameState.MAINMENU) {
             // TODO - menu drawing
             g.drawImage(logo, 150, 0, this);
             paintButtons(g, mainMenu);
@@ -203,6 +212,9 @@ public class Main extends Applet implements Runnable, KeyListener, MouseListener
         }
         else if (gameState == GameState.GAMEOVERMENU) {
             paintButtons(g, gameOverMenu);
+        }
+        else if (gameState == GameState.LEVELPASSEDMENU){
+            paintButtons(g, levelPassedMenu);
         }
     }
 
@@ -261,7 +273,7 @@ public class Main extends Applet implements Runnable, KeyListener, MouseListener
                 break;
 
             case KeyEvent.VK_ESCAPE:
-                gameState = GameState.MENU;
+                gameState = GameState.MAINMENU;
                 break;
         }
     }
@@ -292,7 +304,7 @@ public class Main extends Applet implements Runnable, KeyListener, MouseListener
 
     @Override
     public void mousePressed(MouseEvent e) {
-        if (gameState == GameState.MENU) {
+        if (gameState == GameState.MAINMENU) {
             mainMenu.pressButton(e.getX(), e.getY());
         }
         else if (gameState == GameState.LEVELMENU){
@@ -300,6 +312,9 @@ public class Main extends Applet implements Runnable, KeyListener, MouseListener
         }
         else if (gameState == GameState.GAMEOVERMENU){
             gameOverMenu.pressButton(e.getX(), e.getY());
+        }
+        else if (gameState == GameState.LEVELPASSEDMENU){
+            levelPassedMenu.pressButton(e.getX(), e.getY());
         }
     }
 

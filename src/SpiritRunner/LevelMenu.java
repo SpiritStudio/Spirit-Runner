@@ -46,8 +46,10 @@ public class LevelMenu extends Menu{
     public static int getNoButtonsX() {
         return noButtonsX;
     }
-
     public static int getNoButtonsY() {
         return noButtonsY;
     }
+
+    public int getLevelNumber() { return levelNumber; }
+    public void setLevelNumber(int levelNumber) { this.levelNumber = levelNumber; }
 }
