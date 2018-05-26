@@ -35,12 +35,12 @@ public class Tile extends Object {
     }
 
     public int checkPlayerInteraction(Player player){
-        if(player.getPosX() + 0.8*player.getWidth() <= this.getPosX() || player.getPosX() + 0.2*player.getWidth() >= this.getPosX() + TileWidth ) {
+        if(player.getPosX() + 0.9*player.getWidth() <= this.getPosX() || player.getPosX() + 0.1*player.getWidth() >= this.getPosX() + TileWidth ) {
             return 0;
         } else {
             if (player.getPosY() + player.getHeight() <= this.posY && player.getPosY() + player.getHeight() + player.getSpeedY() >= this.posY && this.interactionType == 's' && player.getSpeedY() >= 0) { // checks y collision
                 return 1; //standing
-            } else if ((player.getPosY() == this.posY + TileWidth/2 || (player.getPosY() < this.posY + TileWidth/2 && player.getPosY() + player.getSpeedY() >= this.posY + TileWidth/2)) && this.interactionType == 'h' && player.getSpeedY() >= 0) {
+            } else if ((player.getPosY() == this.posY || (player.getPosY() < this.posY && player.getPosY() + player.getSpeedY() >= this.posY )) && this.interactionType == 'h' && player.getSpeedY() >= 0) {
                 return 1; // hanging
             } else return 0;
         }

@@ -134,7 +134,7 @@ public class Level {
                     player.setPosY(tilearray.get(i).getPosY() - player.getHeight());
                 else if (tilearray.get(i).getInteractionType() == 'h') {
                     player.setHanging(true);
-                    player.setPosY(tilearray.get(i).getPosY() + Tile.getTileWidth()/2);
+                    player.setPosY(tilearray.get(i).getPosY());
                 }
                 break;
 

@@ -16,7 +16,9 @@ public class Main extends Applet implements Runnable, KeyListener, MouseListener
 
     private static int gameWidth = 800, gameHeight = 480;
 
-    private Image image, background, background2, logo, character;
+    private Image image, background, background2, logo;
+
+    private static Animation character;
 
     private MainMenu mainMenu;
     private static LevelMenu levelMenu;
@@ -48,6 +50,8 @@ public class Main extends Applet implements Runnable, KeyListener, MouseListener
         scrollSpeed = 0;
         tiles = new Image[noTiles];
         objects = new Image[noObjects + noDecorations];
+        character = new Animation();
+
 
         setBackground(Color.BLACK);
         setFocusable(true);
@@ -62,7 +66,24 @@ public class Main extends Applet implements Runnable, KeyListener, MouseListener
             logo = getImage(new URL(baseString + "/data/logo.png"));
             background = getImage(new URL(baseString + "/data/background.png"));
             background2 = getImage(new URL(baseString + "/data/background2.png"));
-            character = getImage(new URL(baseString + "/data/character.png"));
+
+            //Animation class description in its own source code (first addState, then addFrame)
+            //1st state - staying, 2nd state - running, 3rd state - jumping, 4th state - hanging
+            character.addState(2, 30);
+            character.addFrame(getImage(new URL(baseString + "/data/character.png")));
+            character.addFrame(getImage(new URL(baseString + "/data/character_standing2.png")));
+            character.addState(3, 4);  //running state
+            character.addFrame(getImage(new URL(baseString + "/data/character.png")));
+            character.addFrame(getImage(new URL(baseString + "/data/character2.png")));
+            character.addFrame(getImage(new URL(baseString + "/data/character3.png")));
+            character.addState(1, 60); // jumping state
+            character.addFrame(getImage(new URL(baseString + "data/character_jumping.png")));
+            character.addState(2, 10); // hanging state
+            character.addFrame(getImage(new URL(baseString + "data/character_hanging.png")));
+            character.addFrame(getImage(new URL(baseString + "data/character_hanging2.png")));
+
+            character.setState(0);
+
             for (int i = 0; i < noTiles; i++) {
                 tiles[i] = getImage(new URL(baseString + "/data/tile"+Integer.toString(i+1)+".png"));
             }
@@ -116,6 +137,8 @@ public class Main extends Applet implements Runnable, KeyListener, MouseListener
                 bg2_2.update();
                 level.update(player);
                 player.update();
+
+                character.update();
             }
             else if (gameState == GameState.MENU) {
                 mainMenu.update();
@@ -164,9 +187,9 @@ public class Main extends Applet implements Runnable, KeyListener, MouseListener
 
             paintLevel(g);
 
-            g.drawImage(character, (int) player.getPosX()- scroll, (int) player.getPosY(), this);
-            g.setColor(Color.WHITE);
+            character.paint(g, (int)player.getPosX() - scroll, (int)player.getPosY(), this);
 
+            g.setColor(Color.WHITE);
             g.drawString(String.format("%04d", player.getScore()), gameWidth-70, 30);
             g.drawString("Beers drunk: " + String.format("%02d", player.getBeerCounter()), gameWidth-180, 70);
         }
@@ -188,7 +211,6 @@ public class Main extends Applet implements Runnable, KeyListener, MouseListener
             Tile t = (Tile) level.getTilearray().get(i);
             g.drawImage(t.getTileImage(), (int)t.getPosX() - scroll, (int)t.getPosY(), this);
         }
-        //System.out.println(level.getObjectarray().size());
         for (int i = 0; i < level.getObjectarray().size(); i++) {
             CollidableObject o  = (CollidableObject) level.getObjectarray().get(i);
             g.drawImage(o.getImage(), (int)o.getPosX() - scroll, (int)o.getPosY(), this);
@@ -346,5 +368,7 @@ public class Main extends Applet implements Runnable, KeyListener, MouseListener
     }
     public static int getNoDecorations() { return noDecorations; }
     public static int getNoObjects() { return noObjects; }
+    public static Animation getCharacter() { return character; }
+
 
 }

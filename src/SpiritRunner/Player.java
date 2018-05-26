@@ -15,18 +15,31 @@ public class Player extends Object {
         posX = speedY = score = beerCounter = 0;
         posY = 20;
         speedX = 0;
-        width = 60;
-        height = 51;
+        width = 40;
+        height = 61;
+        Main.getCharacter().setState(0);
     }
 
     public void jump() {
         if (!inAir) speedY = -20;
         inAir = true;
+        Main.getCharacter().setState(2); //setting current state of the animation;
     }
 
     public void update(){
-        if(inAir) speedY += 1;
-        else speedY = 0;
+        if (speedX == 0) Main.getCharacter().setState(0);
+
+        if(inAir) {
+            speedY += 1;
+        }
+        else {
+            speedY = 0;
+            if (speedX > 0)
+                Main.getCharacter().setState(1); //setting current state of the animation;
+        }
+        if (hanging) {
+            Main.getCharacter().setState(3);
+        }
         if(posY + height > Main.getGameHeight()) Main.setGameState(Main.GameState.GAMEOVERMENU); //TODO PLAYER RESET AFTER DEATH
         if (posX + width > Main.getLevel().getWidth() * Tile.getTileWidth()) {
             posX = Main.getLevel().getWidth() * Tile.getTileWidth() - width;
