@@ -4,6 +4,7 @@ import java.applet.Applet;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
+import java.io.IOException;
 import java.net.URL;
 
 
@@ -98,7 +99,11 @@ public class Main extends Applet implements Runnable, KeyListener, MouseListener
     @Override
     public void start() {
         mainMenu = new MainMenu();
-        levelMenu = new LevelMenu();
+        try {
+            levelMenu = new LevelMenu();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         gameOverMenu = new GameOverMenu();
         levelPassedMenu = new LevelPassedMenu();
         bg1 = new Background(0, 0, 4.);
@@ -242,6 +247,32 @@ public class Main extends Applet implements Runnable, KeyListener, MouseListener
             g.setFont(gameFont);
             g.drawString(b.getText(), (int)b.getPosX() + 15, (int)b.getPosY() + 27);
         }
+    }
+
+    private void paintButtons (Graphics g, LevelMenu menu) {
+        for (int i = 0; i < menu.getHighscores().size(); i++) {
+            Button b = menu.getButtons().get(i);
+            g.setColor(Color.LIGHT_GRAY);
+            g.fillRect((int)b.getPosX(), (int)b.getPosY(), (int)b.getWidth(), (int)b.getHeight());
+            g.setColor(Color.BLACK);
+            g.setFont(gameFont);
+            g.drawString(b.getText(), (int)b.getPosX() + 15, (int)b.getPosY() + 27);
+            g.drawString(String.format("%04d", menu.getHighscores().get(i)), (int)b.getPosX() + 15, (int)b.getPosY() + 47);
+        }
+        for (int i = menu.getHighscores().size() + 1; i < menu.getNoButtons(); i++) {
+            Button b = menu.getButtons().get(i);
+            g.setColor(Color.DARK_GRAY);
+            g.fillRect((int)b.getPosX(), (int)b.getPosY(), (int)b.getWidth(), (int)b.getHeight());
+            g.setColor(Color.BLACK);
+            g.setFont(gameFont);
+            g.drawString(b.getText(), (int)b.getPosX() + 15, (int)b.getPosY() + 27);
+        }
+        Button b = menu.getButtons().get(menu.getHighscores().size());
+        g.setColor(Color.LIGHT_GRAY);
+        g.fillRect((int)b.getPosX(), (int)b.getPosY(), (int)b.getWidth(), (int)b.getHeight());
+        g.setColor(Color.BLACK);
+        g.setFont(gameFont);
+        g.drawString(b.getText(), (int)b.getPosX() + 15, (int)b.getPosY() + 27);
     }
 
     @Override

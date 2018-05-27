@@ -1,22 +1,28 @@
 package SpiritRunner;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class LevelMenu extends Menu{
 
     private int levelNumber = 0;
+    private ArrayList<Integer> highscores = new ArrayList<Integer>();
     private static int noButtonsX = 5, noButtonsY = 3;
 
-    public LevelMenu() {
+    public LevelMenu() throws IOException {
+        loadHighscores();
         noButtons = noButtonsX*noButtonsY;
         buttons = new ArrayList<>();
         for (int i = 0; i < noButtonsY; i++)
             for(int j = 0; j < noButtonsX; j++)
-                buttons.add(new Button(Main.getGameWidth()/noButtonsX*j, Main.getGameHeight()/noButtonsY*i, Main.getGameWidth()/8, Main.getGameHeight()/8, String.format("%02d", i*noButtonsX+j+1)));
+                buttons.add(new Button(Main.getGameWidth() / noButtonsX * j, Main.getGameHeight() / noButtonsY * i, Main.getGameWidth() / 8, Main.getGameHeight() / 8, String.format("%02d", i * noButtonsX + j + 1)));
     }
 
     public void pressButton(int mousePosX, int mousePosY) {
-        for (int i = 0; i < noButtonsY*noButtonsX; i++)
+        for (int i = 0; i < highscores.size() + 1; i++)
             if (buttons.get(i).pressButton(mousePosX,mousePosY)){
                 levelNumber = i;
                 reset(levelNumber);
@@ -35,6 +41,25 @@ public class LevelMenu extends Menu{
         Main.setGameState(Main.GameState.GAME);
     }
 
+    public void loadHighscores() throws IOException {
+        String filePath = new File("").getAbsolutePath();
+        filePath = filePath.replace('\\', '/');
+        filePath = filePath + "/src/SpiritRunner/data/highscores.txt";
+        System.out.println(filePath);
+        BufferedReader reader = new BufferedReader(new FileReader(filePath));
+
+        while (true) {
+            String line = reader.readLine();
+            // no more lines to read
+            if (line == null) {
+                reader.close();
+                break;
+            }
+            System.out.println(line);
+            highscores.add(Integer.parseInt(line));
+        }
+    }
+
     public void reset() {
         reset(levelNumber);
     }
@@ -48,6 +73,9 @@ public class LevelMenu extends Menu{
     }
     public static int getNoButtonsY() {
         return noButtonsY;
+    }
+    public ArrayList<Integer> getHighscores() {
+        return highscores;
     }
 
     public int getLevelNumber() { return levelNumber; }
