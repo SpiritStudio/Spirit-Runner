@@ -34,15 +34,25 @@ public class Tile extends Object {
         }
     }
 
-    public int checkPlayerInteraction(Player player){
+    public boolean checkPlayerInteraction(Player player){
         if(player.getPosX() + 0.9*player.getWidth() <= this.getPosX() || player.getPosX() + 0.1*player.getWidth() >= this.getPosX() + TileWidth ) {
-            return 0;
+            return false;
         } else {
             if (player.getPosY() + player.getHeight() <= this.posY && player.getPosY() + player.getHeight() + player.getSpeedY() >= this.posY && this.interactionType == 's' && player.getSpeedY() >= 0) { // checks y collision
-                return 1; //standing
-            } else if ((player.getPosY() == this.posY || (player.getPosY() < this.posY && player.getPosY() + player.getSpeedY() >= this.posY )) && this.interactionType == 'h' && player.getSpeedY() >= 0) {
-                return 1; // hanging
-            } else return 0;
+                player.setInAir(false);
+                player.setPosY(this.getPosY() - player.getHeight());
+                return true; //standing
+            }
+            /*else if (player.getPosY() >= this.posY + this.getHeight() && player.getPosY() + player.getSpeedY() < this.posY + this.getHeight() && (this.interactionType == 's' || this.interactionType == 'c') && player.getSpeedY() < 0) { // checks y collision
+                player.setPosY(this.getPosY() + this.getWidth());
+                player.setSpeedY(0);
+                return true; // ceiling hit
+            } */else if ((player.getPosY() == this.posY || (player.getPosY() < this.posY && player.getPosY() + player.getSpeedY() >= this.posY )) && this.interactionType == 'h' && player.getSpeedY() >= 0) {
+                player.setHanging(true);
+                player.setInAir(false);
+                player.setPosY(this.getPosY()); // change if you want a different height of the hanging position
+                return true; // hanging
+            } else return false;
         }
     }
 
