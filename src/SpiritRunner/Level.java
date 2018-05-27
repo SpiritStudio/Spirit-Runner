@@ -126,20 +126,11 @@ public class Level {
         //checks collisions with tiles
         player.setInAir(true);
         player.setHanging(false);
-        for (int i =0; i < tilearray.size(); i++) {
-            if (tilearray.get(i).checkPlayerInteraction(player) == 1) {
-                player.setInAir(false);
 
-                if (tilearray.get(i).getInteractionType() == 's')
-                    player.setPosY(tilearray.get(i).getPosY() - player.getHeight());
-                else if (tilearray.get(i).getInteractionType() == 'h') {
-                    player.setHanging(true);
-                    player.setPosY(tilearray.get(i).getPosY());
-                }
-                break;
+        for (int i =0; i < tilearray.size(); i++)
+            if (tilearray.get(i).checkPlayerInteraction(player)) 
+               break;
 
-            }
-        }
 
         //checks collision with collidable objects
         for(int i = 0; i < objectarray.size(); i++) {
