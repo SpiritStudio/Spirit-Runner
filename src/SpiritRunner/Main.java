@@ -250,29 +250,19 @@ public class Main extends Applet implements Runnable, KeyListener, MouseListener
     }
 
     private void paintButtons (Graphics g, LevelMenu menu) {
-        for (int i = 0; i < menu.getHighscores().size(); i++) {
+        for (int i = 0; i < menu.getNoButtons(); i++) {
             Button b = menu.getButtons().get(i);
-            g.setColor(Color.LIGHT_GRAY);
+            if (i <= menu.getHighscores().size())
+                g.setColor(Color.LIGHT_GRAY);
+            else
+                g.setColor(Color.DARK_GRAY);
             g.fillRect((int)b.getPosX(), (int)b.getPosY(), (int)b.getWidth(), (int)b.getHeight());
             g.setColor(Color.BLACK);
             g.setFont(gameFont);
             g.drawString(b.getText(), (int)b.getPosX() + 15, (int)b.getPosY() + 27);
-            g.drawString(String.format("%04d", menu.getHighscores().get(i)), (int)b.getPosX() + 15, (int)b.getPosY() + 47);
+            if (i < menu.getHighscores().size())
+                g.drawString(String.format("%04d", menu.getHighscores().get(i)), (int)b.getPosX() + 15, (int)b.getPosY() + 47);
         }
-        for (int i = menu.getHighscores().size() + 1; i < menu.getNoButtons(); i++) {
-            Button b = menu.getButtons().get(i);
-            g.setColor(Color.DARK_GRAY);
-            g.fillRect((int)b.getPosX(), (int)b.getPosY(), (int)b.getWidth(), (int)b.getHeight());
-            g.setColor(Color.BLACK);
-            g.setFont(gameFont);
-            g.drawString(b.getText(), (int)b.getPosX() + 15, (int)b.getPosY() + 27);
-        }
-        Button b = menu.getButtons().get(menu.getHighscores().size());
-        g.setColor(Color.LIGHT_GRAY);
-        g.fillRect((int)b.getPosX(), (int)b.getPosY(), (int)b.getWidth(), (int)b.getHeight());
-        g.setColor(Color.BLACK);
-        g.setFont(gameFont);
-        g.drawString(b.getText(), (int)b.getPosX() + 15, (int)b.getPosY() + 27);
     }
 
     @Override
