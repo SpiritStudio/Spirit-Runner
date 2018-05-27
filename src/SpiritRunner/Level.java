@@ -128,7 +128,7 @@ public class Level {
         player.setHanging(false);
 
         for (int i =0; i < tilearray.size(); i++)
-            if (tilearray.get(i).checkPlayerInteraction(player)) 
+            if (tilearray.get(i).checkPlayerInteraction(player))
                break;
 
 

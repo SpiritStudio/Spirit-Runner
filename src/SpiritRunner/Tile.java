@@ -43,11 +43,11 @@ public class Tile extends Object {
                 player.setPosY(this.getPosY() - player.getHeight());
                 return true; //standing
             }
-            else if (player.getPosY() >= this.posY + this.getHeight() && player.getPosY() + player.getSpeedY() < this.posY + this.getHeight() && (this.interactionType == 's' || this.interactionType == 'c') && player.getSpeedY() < 0) { // checks y collision
+            /*else if (player.getPosY() >= this.posY + this.getHeight() && player.getPosY() + player.getSpeedY() < this.posY + this.getHeight() && (this.interactionType == 's' || this.interactionType == 'c') && player.getSpeedY() < 0) { // checks y collision
                 player.setPosY(this.getPosY() + this.getWidth());
                 player.setSpeedY(0);
                 return true; // ceiling hit
-            } else if ((player.getPosY() == this.posY || (player.getPosY() < this.posY && player.getPosY() + player.getSpeedY() >= this.posY )) && this.interactionType == 'h' && player.getSpeedY() >= 0) {
+            } */else if ((player.getPosY() == this.posY || (player.getPosY() < this.posY && player.getPosY() + player.getSpeedY() >= this.posY )) && this.interactionType == 'h' && player.getSpeedY() >= 0) {
                 player.setHanging(true);
                 player.setInAir(false);
                 player.setPosY(this.getPosY()); // change if you want a different height of the hanging position
