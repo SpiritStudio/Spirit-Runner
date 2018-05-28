@@ -1,18 +1,19 @@
 package SpiritRunner;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 
 public class LevelMenu extends Menu{
 
     private int levelNumber = 0;
+    private String highscoresPath;
     private ArrayList<Integer> highscores = new ArrayList<Integer>();
     private static int noButtonsX = 5, noButtonsY = 3;
 
     public LevelMenu() throws IOException {
+        highscoresPath = new File("").getAbsolutePath();
+        highscoresPath = highscoresPath.replace('\\', '/');
+        highscoresPath = highscoresPath + "/src/SpiritRunner/data/highscores.txt";
         loadHighscores();
         noButtons = noButtonsX*noButtonsY;
         buttons = new ArrayList<>();
@@ -42,12 +43,7 @@ public class LevelMenu extends Menu{
     }
 
     public void loadHighscores() throws IOException {
-        String filePath = new File("").getAbsolutePath();
-        filePath = filePath.replace('\\', '/');
-        filePath = filePath + "/src/SpiritRunner/data/highscores.txt";
-        System.out.println(filePath);
-        BufferedReader reader = new BufferedReader(new FileReader(filePath));
-
+        BufferedReader reader = new BufferedReader(new FileReader(highscoresPath));
         while (true) {
             String line = reader.readLine();
             // no more lines to read
@@ -55,8 +51,26 @@ public class LevelMenu extends Menu{
                 reader.close();
                 break;
             }
-            System.out.println(line);
+            //System.out.println(line);
             highscores.add(Integer.parseInt(line));
+        }
+    }
+
+    public void updateHighscores(int score) throws IOException {
+        if (score > highscores.get(levelNumber)) {
+            highscores.set(levelNumber, score);
+            try {
+                FileWriter fw = new FileWriter(highscoresPath);
+                BufferedWriter out = new BufferedWriter(fw);
+                for(int s : highscores) {
+                    out.write(String.valueOf(s));
+                    out.write(System.lineSeparator());
+                }
+                out.flush();
+                out.close();
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
         }
     }
 

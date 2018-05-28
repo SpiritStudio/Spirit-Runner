@@ -112,7 +112,6 @@ public class Main extends Applet implements Runnable, KeyListener, MouseListener
         bg2_2 = new Background(bg2_1.getWidth(), 0, 3.);
         level = new Level();
         player = new Player();
-
         Thread thread = new Thread(this);
         thread.start();
     }
@@ -134,6 +133,8 @@ public class Main extends Applet implements Runnable, KeyListener, MouseListener
             if (gameState == GameState.GAME) {
                 if (player.getPosX() >= level.getWidth()*Tile.getTileWidth() - player.getWidth()){
                     gameState = GameState.LEVELPASSEDMENU;
+                    try { levelMenu.updateHighscores(player.getScore()); }
+                    catch (IOException e) { e.printStackTrace(); }
                 } else {
                     scroll = (int) player.getPosX() - 30;
 
