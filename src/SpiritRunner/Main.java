@@ -10,7 +10,7 @@ import java.net.URL;
 
 public class Main extends Applet implements Runnable, KeyListener, MouseListener {
     public enum GameState {
-        MAINMENU, LEVELMENU, GAME, EXIT, GAMEOVERMENU, LEVELPASSEDMENU
+        MAINMENU, LEVELMENU, GAME, INFINITEGAME, EXIT, GAMEOVERMENU, LEVELPASSEDMENU
     }
 
     private static GameState gameState = GameState.MAINMENU;
@@ -130,7 +130,7 @@ public class Main extends Applet implements Runnable, KeyListener, MouseListener
     public void run() {
         while (gameState != GameState.EXIT) {
             time = System.nanoTime();
-            if (gameState == GameState.GAME) {
+            if (gameState == GameState.GAME || gameState == GameState.INFINITEGAME) {
                 if (player.getPosX() >= level.getWidth()*Tile.getTileWidth() - player.getWidth()){
                     gameState = GameState.LEVELPASSEDMENU;
                     try { levelMenu.updateHighscores(player.getScore()); }
@@ -165,6 +165,10 @@ public class Main extends Applet implements Runnable, KeyListener, MouseListener
                 gameOverMenu.update();
             }
 
+            if (gameState == GameState.INFINITEGAME && levelStart) {
+                player.setSpeedX(Player.initialSpeed + (player.getPosX()/2000));
+            }
+
             repaint();
             time = System.nanoTime() - time;
 
@@ -197,7 +201,7 @@ public class Main extends Applet implements Runnable, KeyListener, MouseListener
 
     @Override
     public void paint(Graphics g) {
-        if (gameState == GameState.GAME) {
+        if (gameState == GameState.GAME || gameState == GameState.INFINITEGAME) {
             g.drawImage(background, (int) bg1.getPosX() - (int)(scroll/bg1.getParallax()), (int) bg1.getPosY(), this);
             g.drawImage(background, (int) bg2.getPosX() - (int)(scroll/bg2.getParallax()), (int) bg2.getPosY(), this);
             g.drawImage(background2, (int) bg2_1.getPosX() - (int)(scroll/bg2_1.getParallax()), (int) bg2_1.getPosY(), this);

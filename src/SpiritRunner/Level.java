@@ -9,6 +9,8 @@ public class Level {
     private ArrayList<Decoration> decorationarray;
     private int width, height;
 
+    public static int StandardHeight  = 12;
+
 
     public Level() {
         reset();
@@ -23,14 +25,19 @@ public class Level {
     }
 
     public void start(int noMap) {
-        try {
-            String map = "/data/map" + noMap + ".txt";
-            loadMap(map);
-            System.out.println("Mapa " + noMap + " zaladowana!");
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+        if (noMap >= 1) {
+            try {
+                String map = "/data/map" + noMap + ".txt";
+                loadMap(map);
+                System.out.println("Mapa " + noMap + " zaladowana!");
+            } catch (IOException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+        } else {
+            MapGenerator.generateMap(this);
         }
+
     }
 
     private void loadMap(String filename) throws IOException {
@@ -149,6 +156,8 @@ public class Level {
     public ArrayList<CollidableObject> getObjectarray() { return objectarray; }
     public CollidableObject getObject(int objectIndex){ return objectarray.get(objectIndex); }
     public int getWidth() { return width; }
+    public void setWidth(int width) { this.width = width; }
+    public void setHeight(int height) {this.height = height;}
 
     public ArrayList<Decoration> getDecorationarray() {
         return decorationarray;

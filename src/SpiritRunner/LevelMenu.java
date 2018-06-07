@@ -5,7 +5,7 @@ import java.util.ArrayList;
 
 public class LevelMenu extends Menu{
 
-    private int levelNumber = 0;
+    private static int levelNumber = 0;
     private String highscoresPath;
     private ArrayList<Integer> highscores = new ArrayList<Integer>();
     private static int noButtonsX = 5, noButtonsY = 3;
@@ -25,7 +25,7 @@ public class LevelMenu extends Menu{
     public void pressButton(int mousePosX, int mousePosY) {
         for (int i = 0; i < highscores.size() + 1; i++)
             if (buttons.get(i).pressButton(mousePosX,mousePosY)){
-                levelNumber = i;
+                levelNumber = i+1;
                 reset(levelNumber);
             }
     }
@@ -38,7 +38,7 @@ public class LevelMenu extends Menu{
         Main.getBg2().reset(Main.getBg1().getWidth(), 0, Main.getBg2().getParallax());
         Main.getBg2_1().reset(0,0, Main.getBg2_1().getParallax());
         Main.getBg2_2().reset(Main.getBg2_1().getWidth(), 0, Main.getBg2_2().getParallax());
-        Main.getLevel().start(levelNumber+1);
+        Main.getLevel().start(levelNumber);
         Main.setGameState(Main.GameState.GAME);
     }
 
@@ -77,6 +77,10 @@ public class LevelMenu extends Menu{
     public void reset() {
         reset(levelNumber);
     }
+    public void resetInfinite() {
+        reset(0);
+        Main.setGameState(Main.GameState.INFINITEGAME);
+    }
 
     public void update() {
         //TODO MENU ANIMATIONS
@@ -92,6 +96,6 @@ public class LevelMenu extends Menu{
         return highscores;
     }
 
-    public int getLevelNumber() { return levelNumber; }
-    public void setLevelNumber(int levelNumber) { this.levelNumber = levelNumber; }
+    public static int getLevelNumber() { return levelNumber; }
+    public static void setLevelNumber(int _levelNumber) { levelNumber = _levelNumber; }
 }
