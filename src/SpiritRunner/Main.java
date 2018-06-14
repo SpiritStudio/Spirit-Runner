@@ -10,14 +10,14 @@ import java.net.URL;
 
 public class Main extends Applet implements Runnable, KeyListener, MouseListener {
     public enum GameState {
-        MAINMENU, LEVELMENU, GAME, INFINITEGAME, EXIT, GAMEOVERMENU, LEVELPASSEDMENU
+        MAINMENU, LEVELMENU, GAME, INFINITEGAME, EXIT, GAMEOVERMENU, LEVELPASSEDMENU, REPLAY
     }
 
     private static GameState gameState = GameState.MAINMENU;
 
     private static int gameWidth = 800, gameHeight = 480;
 
-    private Image image, background, background2, logo;
+    private Image image, background, background2, logo, playButton, infiniteModeButton, exitButton;
 
     private static Animation character;
 
@@ -33,7 +33,8 @@ public class Main extends Applet implements Runnable, KeyListener, MouseListener
     public static Image tiles[], objects[];
 
     private Graphics second;
-    private static Font gameFont = new Font("Calibri", Font.BOLD, 24);
+    private static Font gameFont = new Font("Haettenschweiler", Font.PLAIN, 28);
+    private static Font gameFontSmall = new Font("Haettenschweiler", Font.PLAIN, 20);
     private String baseString;
     private static Background bg1, bg2, bg2_1, bg2_2;
     private static int scroll = 0, scrollSpeed = 0;
@@ -43,11 +44,12 @@ public class Main extends Applet implements Runnable, KeyListener, MouseListener
     private static Level level;
     private static Player player;
 
-    private static double time = System.currentTimeMillis();
+    private static double time = System.currentTimeMillis(), timeForJumps = System.currentTimeMillis();
 
     @Override
     public void init() {
         setSize(gameWidth, gameHeight);
+
         scroll = 0;
         scrollSpeed = 0;
         tiles = new Image[noTiles];
@@ -60,11 +62,15 @@ public class Main extends Applet implements Runnable, KeyListener, MouseListener
         addMouseListener(this);
         Frame frame = (Frame) this.getParent().getParent();
         frame.setTitle("Spirit Runner");
-        baseString = new File("").getAbsolutePath();
+        //baseString = new File("").getAbsolutePath();
+        baseString = "X:/Gierka"; //TODO Something wrong with absolute path reading;
         baseString = baseString.replace('\\', '/');
         baseString = "file:/" + baseString + "/src/SpiritRunner/"; // TODO YOU KNOW WHAT
         try {
-            logo = getImage(new URL(baseString + "/data/logo.png"));
+            logo = getImage(new URL(baseString + "/data/splash.png"));
+            playButton = getImage(new URL(baseString + "/data/playnow.png"));
+            infiniteModeButton = getImage(new URL(baseString + "/data/infintemode.png"));
+            exitButton = getImage(new URL(baseString + "/data/exit.png"));
             background = getImage(new URL(baseString + "/data/background.png"));
             background2 = getImage(new URL(baseString + "/data/background2.png"));
 
@@ -130,7 +136,7 @@ public class Main extends Applet implements Runnable, KeyListener, MouseListener
     public void run() {
         while (gameState != GameState.EXIT) {
             time = System.nanoTime();
-            if (gameState == GameState.GAME || gameState == GameState.INFINITEGAME) {
+            if (gameState == GameState.GAME || gameState == GameState.INFINITEGAME || gameState == GameState.REPLAY) {
                 if (player.getPosX() >= level.getWidth()*Tile.getTileWidth() - player.getWidth()){
                     gameState = GameState.LEVELPASSEDMENU;
                     try { levelMenu.updateHighscores(player.getScore()); }
@@ -147,7 +153,7 @@ public class Main extends Applet implements Runnable, KeyListener, MouseListener
                     bg2_1.update();
                     bg2_2.update();
                     level.update(player);
-                    player.update();
+                    player.update(gameState==GameState.REPLAY);
 
                     character.update();
                 }
@@ -170,11 +176,11 @@ public class Main extends Applet implements Runnable, KeyListener, MouseListener
             }
 
             repaint();
-            time = System.nanoTime() - time;
-
+            time = (System.nanoTime() - time)/1000000.0;
+            //System.out.println("Time for one frame: " + Double.toString(time));
             try {
-                  if (time / 1000000.0 < 17.0)
-                         Thread.sleep((int) (17.0 - time / 1000000.0));
+                  if (time < 17.0)
+                         Thread.sleep((int) (17.0 - time));
                   else
                          Thread.sleep((int) (17.0));
             } catch (InterruptedException e) {
@@ -201,7 +207,7 @@ public class Main extends Applet implements Runnable, KeyListener, MouseListener
 
     @Override
     public void paint(Graphics g) {
-        if (gameState == GameState.GAME || gameState == GameState.INFINITEGAME) {
+        if (gameState == GameState.GAME || gameState == GameState.INFINITEGAME || gameState == GameState.REPLAY) {
             g.drawImage(background, (int) bg1.getPosX() - (int)(scroll/bg1.getParallax()), (int) bg1.getPosY(), this);
             g.drawImage(background, (int) bg2.getPosX() - (int)(scroll/bg2.getParallax()), (int) bg2.getPosY(), this);
             g.drawImage(background2, (int) bg2_1.getPosX() - (int)(scroll/bg2_1.getParallax()), (int) bg2_1.getPosY(), this);
@@ -209,12 +215,12 @@ public class Main extends Applet implements Runnable, KeyListener, MouseListener
             paintLevel(g);
             character.paint(g, (int)player.getPosX() - scroll, (int)player.getPosY(), this);
             g.setColor(Color.WHITE);
-            g.drawString(String.format("%04d", player.getScore()), gameWidth-70, 30);
-            g.drawString(String.format("%02d", player.getBeerCounter()), gameWidth-45, 70);
+            g.drawString(String.format("Coins: %04d", player.getScore()), gameWidth-120, 30);
+            g.drawString(String.format("Beers: %02d", player.getBeerCounter()), gameWidth-105, 70);
         }
         else if (gameState == GameState.MAINMENU) {
             // TODO - menu drawing
-            g.drawImage(logo, 150, 0, this);
+            g.drawImage(logo, 0, 0, this);
             paintButtons(g, mainMenu);
         }
         else if (gameState == GameState.LEVELMENU){
@@ -246,11 +252,14 @@ public class Main extends Applet implements Runnable, KeyListener, MouseListener
     private void paintButtons (Graphics g, Menu menu) {
         for (int i = 0; i < menu.getNoButtons(); i++) {
             Button b = menu.getButtons().get(i);
-            g.setColor(Color.LIGHT_GRAY);
+            g.setColor(new Color(0.7f,0f,0f,.5f ));
             g.fillRect((int)b.getPosX(), (int)b.getPosY(), (int)b.getWidth(), (int)b.getHeight());
             g.setColor(Color.BLACK);
             g.setFont(gameFont);
-            g.drawString(b.getText(), (int)b.getPosX() + 15, (int)b.getPosY() + 27);
+            printCenteredString(g, b.getText(), b.getWidth(), (int)b.getPosX(), (int)b.getPosY()+34);
+            g.setColor(Color.WHITE);
+            printCenteredString(g, b.getText(), b.getWidth(), (int)b.getPosX(), (int)b.getPosY()+30);
+
         }
     }
 
@@ -258,15 +267,23 @@ public class Main extends Applet implements Runnable, KeyListener, MouseListener
         for (int i = 0; i < menu.getNoButtons(); i++) {
             Button b = menu.getButtons().get(i);
             if (i <= menu.getHighscores().size())
-                g.setColor(Color.LIGHT_GRAY);
+                g.setColor(new Color(0.7f,0f,0f,.5f ));
             else
-                g.setColor(Color.DARK_GRAY);
+                g.setColor(new Color(0.2f,0f,0f,.5f ));
             g.fillRect((int)b.getPosX(), (int)b.getPosY(), (int)b.getWidth(), (int)b.getHeight());
             g.setColor(Color.BLACK);
             g.setFont(gameFont);
-            g.drawString(b.getText(), (int)b.getPosX() + 15, (int)b.getPosY() + 27);
-            if (i < menu.getHighscores().size())
-                g.drawString(String.format("%04d", menu.getHighscores().get(i)), (int)b.getPosX() + 15, (int)b.getPosY() + 47);
+            printCenteredString(g, b.getText(), b.getWidth(), (int)b.getPosX(), (int)b.getPosY()+36);
+            g.setColor(Color.WHITE);
+            printCenteredString(g, b.getText(), b.getWidth(), (int)b.getPosX(), (int)b.getPosY()+30);
+
+            if (i < menu.getHighscores().size()) {
+                g.setFont(gameFontSmall);
+                g.setColor(Color.BLACK);
+                printCenteredString(g, String.format("%04d", menu.getHighscores().get(i)), b.getWidth(), (int) b.getPosX(), (int) b.getPosY() + 59);
+                g.setColor(Color.WHITE);
+                printCenteredString(g, String.format("%04d", menu.getHighscores().get(i)), b.getWidth(), (int) b.getPosX(), (int) b.getPosY() + 55);
+            }
         }
     }
 
@@ -279,19 +296,22 @@ public class Main extends Applet implements Runnable, KeyListener, MouseListener
                 break;
 
             case KeyEvent.VK_UP:
-                if (levelStart)
+                if (levelStart) {
                     player.jump();
+                    LevelMenu.jumps.add(System.currentTimeMillis()-timeForJumps);
+                }
                 else {
                     player.setSpeedX(Player.initialSpeed);
                     levelStart = true;
+                    timeForJumps = System.currentTimeMillis();
                 }
                 break;
 
             case KeyEvent.VK_DOWN:
-                if (player.isHanging()) {
+                /*if (player.isHanging()) {
                     player.setInAir(true);
                     player.setPosY(player.getPosY() + 1);
-                }
+                }*/
                 break;
 
             case KeyEvent.VK_RIGHT:
@@ -409,7 +429,15 @@ public class Main extends Applet implements Runnable, KeyListener, MouseListener
     }
     public static int getNoDecorations() { return noDecorations; }
     public static int getNoObjects() { return noObjects; }
+    public static double getTimeForJumps() { return timeForJumps;   }
     public static Animation getCharacter() { return character; }
+    public static boolean getLevelStart() {return levelStart;}
+
+    private void printCenteredString(Graphics g, String s, int width, int XPos, int YPos){
+        int stringLen = (int) g.getFontMetrics().getStringBounds(s, g).getWidth();
+        int start = width/2 - stringLen/2;
+        g.drawString(s, start + XPos, YPos);
+    }
 
 
 }

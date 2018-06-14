@@ -13,10 +13,12 @@ public class GameOverMenu extends Menu{
 
     public void pressButton(int mousePosX, int mousePosY) {
         if (buttons.get(0).pressButton(mousePosX,mousePosY)) {
+
             if (LevelMenu.getLevelNumber() > 0)
-                Main.getLevelMenu().reset();
+                Main.getLevelMenu().reset(false);
             else
                 Main.getLevelMenu().resetInfinite();
+
         }
         else if (buttons.get(1).pressButton(mousePosX,mousePosY)) Main.setGameState(Main.GameState.MAINMENU);
     }

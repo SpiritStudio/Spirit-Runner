@@ -15,10 +15,17 @@ public class LevelPassedMenu extends Menu {
     public void pressButton(int mousePosX, int mousePosY) {
         if (buttons.get(0).pressButton(mousePosX, mousePosY)) {
             Main.getLevelMenu().setLevelNumber(Main.getLevelMenu().getLevelNumber() + 1);
-            Main.getLevelMenu().reset(Main.getLevelMenu().getLevelNumber());
+            Main.getLevelMenu().reset(Main.getLevelMenu().getLevelNumber(), false);
         } else if (buttons.get(1).pressButton(mousePosX, mousePosY)) Main.setGameState(Main.GameState.MAINMENU);
         else if (buttons.get(2).pressButton(mousePosX, mousePosY)) {
-            //TODO REWATCH
+            if (LevelMenu.getLevelNumber() > 0) {
+                Main.setGameState(Main.GameState.REPLAY);
+                for (int i = 0; i < LevelMenu.jumps.size();i++) System.out.println(LevelMenu.jumps.get(i));
+                Main.getLevelMenu().reset(true);
+            }
+            else {
+                Main.getLevelMenu().resetInfinite();
+            }
         }
     }
 }

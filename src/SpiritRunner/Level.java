@@ -43,7 +43,8 @@ public class Level {
     private void loadMap(String filename) throws IOException {
         ArrayList lines = new ArrayList();
 
-        String filePath = new File("").getAbsolutePath();
+        //String filePath = new File("").getAbsolutePath();
+        String filePath = "X:/Gierka"; //TODO Something wrong with absolute path reading;
         filePath = filePath.replace('\\', '/');
         filePath = filePath + "/src/SpiritRunner/" + filename;
         System.out.println(filePath);
@@ -125,7 +126,7 @@ public class Level {
             Tile t = new Tile(posX, posY, chosenTile);
             tilearray.add(t);
 
-            System.out.println("placed");
+            //System.out.println("placed");
         }
     }
 

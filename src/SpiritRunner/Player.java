@@ -4,6 +4,7 @@ public class Player extends Object {
 
     private boolean inAir = true, hanging = false;
     private int score = 0, beerCounter = 0;
+    private int replayJump = 0;
 
     public static double initialSpeed = 6.0;
 
@@ -12,6 +13,7 @@ public class Player extends Object {
     }
 
     public void reset(){
+        replayJump = 0;
         posX = speedY = score = beerCounter = 0;
         posY = 20;
         speedX = 0;
@@ -26,7 +28,16 @@ public class Player extends Object {
         Main.getCharacter().setState(2); //setting current state of the animation;
     }
 
-    public void update(){
+    public void update(boolean replay){
+        if (replay && Main.getLevelStart()) {
+            if (replayJump < LevelMenu.jumps.size()) {
+                if (System.currentTimeMillis() - Main.getTimeForJumps() >= LevelMenu.jumps.get(replayJump)) {
+                    jump();
+                    replayJump++;
+                }
+            }
+        }
+
         if (speedX == 0) Main.getCharacter().setState(0);
 
         if(inAir) {

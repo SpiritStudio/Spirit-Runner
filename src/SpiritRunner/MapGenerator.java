@@ -12,7 +12,7 @@ public class MapGenerator {
             placePlatform(level, x, y, width);
             //x = x + width + (int)(Math.random()*4+1) + (int)(Main.getPlayer().getSpeedX()-6.0);
             x = x + width + (int)(Math.random()*4+1) + x/(4000/Tile.getTileWidth());
-            if (y < 4) y = y + (int)(Math.random()*4);
+            if (y < 6) y = y + (int)(Math.random()*4);
             else if (y > 8) y = y - (int)(Math.random()*4);
             else y = y + (int)(Math.random()*8 - 4);
 
@@ -32,6 +32,13 @@ public class MapGenerator {
         if(Math.random() >= 0.5) {
             int coinsWidth = (int)(Math.random()*(width-1.0)+1);
             placeCoins(level, x + (width - coinsWidth)/2, y-1, coinsWidth);
+        }
+        double random = Math.random();
+        if (random >= 0.7) {
+            level.getDecorationarray().add(new Decoration((x+Math.random()*(width-1.0))*Tile.getTileWidth(), y*Tile.getTileWidth()-80, '4'));
+        }
+        else if (random >= 0.5 && random < 0.7) {
+            level.getDecorationarray().add(new Decoration((x+Math.random()*(width-1.0))*Tile.getTileWidth(), y*Tile.getTileWidth()-160, '5'));
         }
     }
 
